@@ -64,3 +64,88 @@ public class EchoClient{
         }
     }
 }
+
+2.Math 
+import java.io.*;
+import java.net.*;
+import java.util.StringTokenizer;
+
+
+public class MathServer {
+    public static void main(String[] args) {
+        try{
+            //serversocket create
+            ServerSocket ss=new ServerSocket(5000);
+            System.out.println("Server is running...");
+            
+            Socket s= ss.accept();
+            System.out.println("Client connected.");
+            
+            DataInputStream dis=new DataInputStream(s.getInputStream());
+            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+            
+            
+            String input=dis.readUTF();
+            System.out.println("Received:"+input);
+            
+            StringTokenizer st=new StringTokenizer(input,"+-*/",true);
+            int num1=Integer.parseInt(st.nextToken());
+            String op=st.nextToken();
+            int num2=Integer.parseInt(st.nextToken());
+            
+            int result=0;
+            if(op.equals("+"))
+                result=num1+num2;
+            else if(op.equals("-"))
+                result=num1-num2;
+            else if(op.equals("*"))
+                result=num1*num2;
+            else if(op.equals("/"))
+                result=num1/num2;
+            
+            dos.writeUTF("Result:" +result);
+            
+            s.close();
+            ss.close();
+            
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
+}
+
+
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+
+public class MathClient {
+    public static void main(String[] args) {
+        try{
+            //connect to server
+            Socket s=new Socket("localhost",5000);
+            Scanner sc=new Scanner(System.in);
+            
+            DataInputStream dis=new DataInputStream(s.getInputStream());
+            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+            
+            System.out.println("Enter expression(exmple:10+5): ");
+            String expr=sc.nextLine();
+            
+            dos.writeUTF(expr);
+            
+            String result=dis.readUTF();
+            System.out.println(result);
+            
+            s.close();
+            sc.close();
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+}
