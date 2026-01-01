@@ -1,0 +1,66 @@
+Lab-2:
+
+1.Echo server
+
+import java.io.*;
+import java.net.*;
+
+public class EchoServer{
+    public static void main(String[] args) {
+        try{
+            //serverSocket
+            ServerSocket ss=new ServerSocket(5000);
+            System.out.println("Server is running...");
+            
+            Socket s= ss.accept();
+            System.out.println("Client Connected.");
+            
+            DataInputStream dis=new DataInputStream(s.getInputStream());
+            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+            
+            String msg=dis.readUTF();
+            System.out.println("Client says:"+msg);
+            dos.writeUTF(msg);
+            
+            s.close();
+            ss.close();
+            
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+}
+
+
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class EchoClient{
+    public static void main(String[] args) {
+        try{
+            //connect with server
+            Socket s=new Socket("localhost",5000);
+            
+            DataInputStream dis=new DataInputStream(s.getInputStream());
+            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+            
+            Scanner sc=new Scanner(System.in);
+            System.out.println("Enter msg:");
+            String msg=sc.nextLine();
+            
+            dos.writeUTF(msg);
+            String echo=dis.readUTF();
+            System.out.println("echo from server:"+echo);
+            
+            s.close();
+            sc.close();
+            
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+}
