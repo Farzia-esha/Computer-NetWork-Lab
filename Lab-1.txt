@@ -50,60 +50,43 @@ public class ParityCheck {
 p-2:CharacterCount
 
 
-import java.util.Scanner;
+import java.util.*;
 
-
-public class CharacterCount {
+public class CharacterCount{
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
         
-        //sender side
-        System.out.println("Enter the num of frames you want to send:");
+        System.out.println("Enter the num of Frame:");
         int n=sc.nextInt();
-        sc.nextLine();
         
-        String[] frames=new String[n];
-        String transmittedData="";
+        String frameString="";
+        String frame="";
         
         for(int i=0;i<n;i++){
             System.out.println("Enter the frame:");
-            frames[i]=sc.nextLine();
-            
-            int length=frames[i].length()+1;
-            transmittedData+=length+frames[i];
+            frame=sc.next();
+            int len=frame.length()+1;
+            frameString=frameString+len+frame;
         }
-        
-        System.out.println("\ntransmitted frame is:"+transmittedData);
+        System.out.println("the transmitted frame:"+frameString);
         
         //receiver side
-        System.out.println("---At Receiver:---");
-        System.out.println("Enter data:");
-        String receivedData=transmittedData;
+        System.out.println("\nAt Receiver:");
+        System.out.println("Frame data:"+frameString);
         
-        int index=0;
-        int frameNo=1;
-        
+        int i=0;
         System.out.println("Frame sizes are:");
-        
-        //first print frame sizes
-        while(index<receivedData.length()){
-            int size=Character.getNumericValue(receivedData.charAt(index));
-            System.out.println( size +" ");
-            index+=size;
+        while(i<frameString.length()){
+            int frameSize= Character.getNumericValue(frameString.charAt(i));
+            System.out.println(frameSize+" ");
+            
+            String fra=frameString.substring(i+1,i+frameSize);
+            System.out.println("\nFrame:"+fra);
+            i+=frameSize;
         }
-        
-        System.out.println("\nframes are:");
-        
-        index=0;
-        while(index<receivedData.length()){
-            int size=Character.getNumericValue(receivedData.charAt(index));
-            String frame=receivedData.substring(index+1,index+size);
-            System.out.println("Frame "+ frameNo + ":" + frame);
-            frameNo++;
-            index+=size;
-        }
-        sc.close();
     }
 }
+
+
 
 
