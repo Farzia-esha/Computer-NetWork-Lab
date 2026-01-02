@@ -149,3 +149,98 @@ public class MathClient {
         }
     }
 }
+
+
+3.loan
+
+
+3.loan
+
+
+import java.io.*;
+import java.net.*;
+import java.util.StringTokenizer;
+
+
+public class LoanServer {
+    public static void main(String[] args) {
+        try{
+            ServerSocket ss=new ServerSocket(5000);
+            System.out.println("server is running...");
+            
+            Socket s=ss.accept();
+            System.out.println("Client connected.");
+            
+            DataInputStream dis=new DataInputStream(s.getInputStream());
+            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+            
+            //receive from client
+            String data=dis.readUTF();
+            System.out.println("Receive:"+data);
+            
+            StringTokenizer st=new StringTokenizer(data,",");
+            
+            double annualRate=Double.parseDouble(st.nextToken());
+            int years=Integer.parseInt(st.nextToken());
+            double loanAmount=Double.parseDouble(st.nextToken());
+            
+            double monthlyRate=annualRate/1200;
+            int months=years*12;
+            
+            double monthlyPayment=
+                    (loanAmount*monthlyRate)/
+                    (1- Math.pow(1+monthlyRate, -months));
+            double totalPayment= monthlyPayment*months;
+            
+            dos.writeUTF("Monthly payment: " + monthlyPayment+
+                        "\nTotal Payment:" + totalPayment);
+            
+            s.close();
+            ss.close();
+            
+            
+            
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+}
+
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+
+public class LoanClient {
+    public static void main(String[] args) {
+        try{
+            Socket s=new Socket("localhost",5000);
+            Scanner sc=new Scanner(System.in);
+            
+            DataInputStream dis=new DataInputStream(s.getInputStream());
+            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+            
+            System.out.println("ENter annual interest rate, num of years,loan amount:");
+            double rate=sc.nextDouble();
+            int years=sc.nextInt();
+            double amount=sc.nextDouble();
+            
+            String data=rate+","+years+","+amount;
+            dos.writeUTF(data);
+            
+            String result=dis.readUTF();
+            System.out.println("\nLoan details from server:");
+            System.out.println(result);
+            
+            s.close();
+            sc.close();
+            
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+}
+
+
